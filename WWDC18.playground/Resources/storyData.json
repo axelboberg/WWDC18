@@ -1,0 +1,17 @@
+[
+ {
+ "heading": "",
+ "text": "Hi! \n \n My name is Axel Boberg. I'm a Swedish student and this is a demo of the current state of my graduation project, which I've been working on for the past few months.",
+ "button": "Continue"
+ },
+ {
+ "heading": "The backstory",
+ "text": "As part of my last year in the swedish upper secondary school I've been entitled to work on a project spanning 100 hours. \n After a few internal debates I decided to learn how to, and train, a machine learning model able to identify music notes (to the degree I'm capable of within the restrains). \n \n I wanted to do something helpful for others, and music has an important role in all our lives, so making it easier to learn notes seemed like a good end goal for my project.",
+ "button": "Continue"
+ },
+ {
+ "heading": "The method",
+ "text": "heufisdhnoxl",
+ "button": "Demo"
+ }
+]
