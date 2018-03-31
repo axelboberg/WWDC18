@@ -15,9 +15,11 @@ class ClassificationListView: UIView {
 	
 	public func loadClasses(identifiers: [String]) {
 		var classificationHeight: CGFloat = 0
+		let barspacing: CGFloat = 3
+		
 		for (i, identifier) in identifiers.enumerated() {
 			let cView = ClassificationView(label: identifier)
-			cView.frame.origin.y = cView.frame.size.height * CGFloat(i)
+			cView.frame.origin.y = cView.frame.size.height * CGFloat(i) + barspacing * CGFloat(i)
 			classificationViews[identifier] = cView
 			
 			self.addSubview(cView)

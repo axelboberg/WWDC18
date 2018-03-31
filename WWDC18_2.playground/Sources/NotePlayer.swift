@@ -2,7 +2,7 @@ import Foundation
 import AVFoundation
 
 public class NotePlayer {
-	private var players = [AVAudioPlayer]()
+	private var player: AVAudioPlayer?
 	
 	public enum Note: String {
 		case gb, ga, gg, gf, ge, gd, gc
@@ -40,18 +40,18 @@ public class NotePlayer {
 	*/
 	public func play(note: Note) {
 		
-		//Get the url for the file
+		///Get the url for the file
 		guard let url = self.getURLForNoteSound(note) else {
 			print("Not a valid sound url")
 			return
 		}
 		
 		do {
-			//Create a player and play it. This will cause a slight delay since the player hasn't had time to buffer.
+			///Create a player and play it. This will cause a slight delay since the player hasn't had time to buffer.
 			let player = try AVAudioPlayer(contentsOf: url)
 			player.play()
 			
-			self.players.append(player) //TODO: Remove the players from the array when they've finished playing. Otherwise a memory leak will occur.
+			self.player = player
 		} catch {
 			print("Note audiofile with url: " + url.description + " was not found")
 		}

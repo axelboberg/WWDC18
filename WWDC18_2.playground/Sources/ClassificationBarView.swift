@@ -23,7 +23,7 @@ class ClassificationBarView: UIView {
 	}
 	
 	private func setupStyle() {
-		self.layer.cornerRadius = 3
+		self.layer.cornerRadius = 5
 		self.layer.masksToBounds = true
 		self.layer.borderWidth = 1.0
 		self.layer.borderColor = UIColor(white: 233/255, alpha: 1).cgColor
@@ -37,6 +37,8 @@ class ClassificationBarView: UIView {
 			self.setupFill()
 		}
 		
-		self.fillView!.frame.size.width = CGFloat(confidence) * self.frame.size.width
+		UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+			self.fillView!.frame.size.width = CGFloat(confidence) * self.frame.size.width
+		})
 	}
 }

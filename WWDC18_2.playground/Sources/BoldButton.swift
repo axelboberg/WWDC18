@@ -17,6 +17,12 @@ public class BoldButton : UIButton {
 		super.init(coder: aDecoder)
 	}
 	
+	/**
+	Set the theme of the button.
+	
+	- parameters:
+	- theme: The ContentTheme to set.
+	*/
 	public func setContentTheme(_ theme: ContentTheme) {
 		switch theme {
 		case ContentTheme.light:
@@ -31,14 +37,14 @@ public class BoldButton : UIButton {
 	
 	private func doSetup() {
 		
-		//Set the default content-theme
+		///Set the default content-theme
 		self.setContentTheme(.dark)
 		
-		//Setup the label
+		///Setup the label
 		self.titleLabel?.sizeToFit()
 		self.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16.0)
 		
-		//Setup the corners
+		///Setup the corners
 		self.layer.cornerRadius = 5
 		self.layer.masksToBounds = true
 	}

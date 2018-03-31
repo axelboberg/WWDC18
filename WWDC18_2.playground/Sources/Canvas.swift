@@ -19,6 +19,13 @@ public class CanvasData {
 	
 	public init() {}
 	
+	/**
+	Analyze the provided points and set the upper and/or lower coordinates
+	if any new point is above/blow the previous values.
+	
+	- parameters:
+	- points: An array of CGPoint to analyze.
+	*/
 	fileprivate func analyzePoints(_ points: [CGPoint]) {
 		for point in points {
 			
@@ -32,6 +39,9 @@ public class CanvasData {
 		}
 	}
 	
+	/**
+	Clears the data by setting the upper and lower coordinates to nil.
+	*/
 	fileprivate func clearData() {
 		self._upper = nil
 		self._lower = nil
@@ -71,13 +81,15 @@ public class Canvas : UIView {
 		
 		self.background = backgroundImg
 		self.subframe = backgroundImg
+		
+		self.draw(points: [], previousFrame: backgroundImg)
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	//Events
+	///Events
 	public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		for touch in touches {
 			self.lastPoint = touch.location(in: self)
@@ -101,10 +113,22 @@ public class Canvas : UIView {
 		self.addSnapshot(self.subframe!)
 	}
 	
+	/**
+	Register a handler to be called when a snapshot is made.
+	
+	- parameters:
+	- handler: A handler to be called with the snapshot as an optional UIImage as parameter. Should return Void.
+	*/
 	public func onSnapshot(_ handler: @escaping(_ snapshot: UIImage?) -> Void) {
 		self.onSnapshotHandlers.append(handler)
 	}
 	
+	/**
+	Call all registered onSnapshotHandlers with the provided snapshot.
+
+	- parameters:
+	- snapshot: The snapshot to pass as a parameter to all handlers, as an optional UIImage.
+	*/
 	private func dispatchSnapshotHandlers(snapshot: UIImage?) {
 		guard let img = snapshot else {
 			return
@@ -115,12 +139,20 @@ public class Canvas : UIView {
 		}
 	}
 	
-	//Drawing
+	///Drawing
 	private func drawLine(from: CGPoint, to: CGPoint){
 		let points = [from, to]
 		self.draw(points: points, previousFrame: self.subframe)
 	}
 	
+	/**
+	Draw lines between the points on the canvas, use the previous frame as a background.
+	Also updates the subframe.
+	
+	- parameters:
+	- points: An array of CGPoint to draw lines between.
+	- previousFrame: An optional UIImage to use as background.
+	*/
 	private func draw(points: [CGPoint], previousFrame: UIImage?){
 		self.subframe = self.renderer!.image { (ctx) in
 			if previousFrame != nil {
@@ -139,6 +171,12 @@ public class Canvas : UIView {
 		self.display(self.subframe!)
 	}
 	
+	/**
+	Displays the provided UIImage in the canvas's UIImageView.
+	
+	- parameters:
+	- image: A UIImage to display.
+	*/
 	private func display(_ image: UIImage){
 		if self.f == nil {
 			self.f = UIImageView(image: image)
@@ -148,12 +186,25 @@ public class Canvas : UIView {
 		self.f!.image = image
 	}
 	
-	//History
+	///History
+	
+	/**
+	Sets the size of the history buffer to num snapshots.
+	
+	- parameters:
+	- num: The number of snapshots to store in the history-buffer. Must be at least 1 and not more than 20.
+	*/
 	public func setHistorySize(_ num: Int){
 		if num > 20 || num < 1 {return}
 		self.historySize = num
 	}
 	
+	/**
+	Adds a UIImage as a snapshot. Triggers a call to all onSnapshotHandlers.
+	
+	- parameters:
+	- image: UIImage representing the snapshot to add.
+	*/
 	private func addSnapshot(_ image: UIImage){
 		if self.snapshots.count >= self.historySize {
 			self.snapshots.removeFirst(self.snapshots.count - self.historySize)
@@ -163,6 +214,11 @@ public class Canvas : UIView {
 		self.dispatchSnapshotHandlers(snapshot: image)
 	}
 	
+	/**
+	Returns the last snapshot.
+	
+	- returns: The last snapshot as an optional UIImage.
+	*/
 	public func lastSnapshot() -> UIImage? {
 		let count = self.snapshots.count
 		if count == 0 && self.background != nil {
@@ -174,6 +230,12 @@ public class Canvas : UIView {
 		return self.snapshots[count - 1]
 	}
 	
+	/**
+	Undo the actions in the canvas certain steps back.
+	
+	- parameters:
+	- steps: The number of steps to go back as an integer.
+	*/
 	public func goBack(_ steps: Int){
 		let count = self.snapshots.count
 		if count == 0 {return}

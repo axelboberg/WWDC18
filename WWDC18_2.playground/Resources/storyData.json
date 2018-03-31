@@ -11,6 +11,11 @@
  },
  {
  "heading": "The method",
- "text": "I started looking for a dataset to utilize, unfortunately, "
+ "text": "I started looking for a dataset to utilize, unfortunately, none were to find providing individual and labelled notes. So, I built an app for my iPhone in order to later collect over 3000 notes. \n \n I began training the model using Keras and TensorFlow, but when Turi Create was released and proved unmatching performance I made a switch.",
+ "button": "Continue"
+ },
+ {
+ "heading": "The result",
+ "text": "With an accuracy score of 0.92 the model proves a point, that it is possible to finish the project with very restricted resources. \n \n However, that score is for classifying photographs and not drawings. So this is very much an experiment. At the side of the model I added an algorithm doing the classification for comparison. \n \n Now, I'd like to invite you up to the stage for a demo, let's go to the next page."
  }
 ]
