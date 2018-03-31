@@ -1,6 +1,43 @@
 import Foundation
 import UIKit
 
+public class CanvasData {
+	private var _upper: CGPoint?
+	private var _lower: CGPoint?
+	
+	public var upper: CGPoint? {
+		get {
+			return self._upper
+		}
+	}
+	
+	public var lower: CGPoint? {
+		get {
+			return self._lower
+		}
+	}
+	
+	public init() {}
+	
+	fileprivate func analyzePoints(_ points: [CGPoint]) {
+		for point in points {
+			
+			if (self.upper == nil)||(point.y < self.upper!.y) {
+				self._upper = point
+			}
+			
+			if (self.lower == nil)||(point.y > self.lower!.y) {
+				self._lower = point
+			}
+		}
+	}
+	
+	fileprivate func clearData() {
+		self._upper = nil
+		self._lower = nil
+	}
+}
+
 public class Canvas : UIView {
 	
 	private var fillColor: UIColor
@@ -14,6 +51,8 @@ public class Canvas : UIView {
 	private var historySize: Int = 5
 	
 	private var onSnapshotHandlers = [(UIImage?) -> Void]()
+	
+	public let data: CanvasData = CanvasData()
 	
 	public override init(frame: CGRect) {
 		self.fillColor = UIColor.black
@@ -46,12 +85,16 @@ public class Canvas : UIView {
 	}
 	
 	public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-		for touch in touches {
+		let points = touches.map{ touch -> CGPoint in
 			let loc = touch.location(in: self)
 			self.drawLine(from: self.lastPoint!, to: loc)
 			
 			self.lastPoint = loc
+			
+			return loc
 		}
+		
+		self.data.analyzePoints(points)
 	}
 	
 	public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -138,6 +181,8 @@ public class Canvas : UIView {
 		var numBack = steps
 		if numBack >= count {
 			numBack = count
+			
+			self.data.clearData()
 		}
 		
 		self.snapshots.removeLast(numBack)

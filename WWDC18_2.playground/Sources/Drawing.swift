@@ -3,7 +3,7 @@ import UIKit
 import Vision
 
 class Drawing : RoundedFrame {
-	let canvas: Canvas?
+	public let canvas: Canvas?
 	let classifier: Classifier?
 	
 	public override init(frame: CGRect) {

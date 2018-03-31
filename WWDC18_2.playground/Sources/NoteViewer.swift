@@ -14,10 +14,12 @@ class NoteViewer : RoundedFrame {
 	var image: UIImage?
 	private var lineDistance: CGFloat = 10
 	
-	public enum Note: Int {
+	/*public enum Note: Int {
 		//Ordered by their appearance from the middle line and downwards
 		case b = 1, a, g, f, e, d, c
-	}
+	}*/
+	
+	let noteMap = ["B", "A", "G", "F", "E", "D", "C"]
 	
 	public override init(frame: CGRect) {
 		self.bgImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height))
@@ -55,9 +57,16 @@ class NoteViewer : RoundedFrame {
 		self.lineDistance = lineDistance
 	}
 	
-	private func calculateNoteFrame(_ note: Note) -> CGRect {
+	private func calculateNoteFrame(_ note: Note) -> CGRect? {
 		//The note's enum-index
-		let k = note.rawValue
+		//let k = note.rawValue
+		
+		guard let noteIndex = noteMap.index(of: note.name) else {
+			return nil
+		}
+		let k = noteIndex + 1 - note.octave * 7
+		
+		print(k)
 		
 		//Calculate the center Y-coordinate in order to have an origin-point
 		let centerY = self.frame.size.height / 2
@@ -84,7 +93,10 @@ class NoteViewer : RoundedFrame {
 			return
 		}
 		
-		imgView.frame = self.calculateNoteFrame(note)
+		guard let nFrame = self.calculateNoteFrame(note) else {
+			return
+		}
+		imgView.frame = nFrame
 		imgView.image = image
 	}
 	
@@ -94,5 +106,11 @@ class NoteViewer : RoundedFrame {
 		}
 		
 		self.image = img
+	}
+}
+
+class MLNoteViewer: NoteViewer {
+	public func show(noteClass: String) {
+		super.show(note: Note(name: String(noteClass[noteClass.index(noteClass.startIndex, offsetBy: 1)]), octave: 0))
 	}
 }

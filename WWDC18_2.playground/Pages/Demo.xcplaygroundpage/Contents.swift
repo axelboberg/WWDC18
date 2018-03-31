@@ -10,7 +10,7 @@ let controller = DemoController();
 
 //: Since the model isn't as accurate as it would be in production, it will get stuck at notes. Probably as a result of overfitting.
 //: Change this variable to `true` in order to force it to not give the same classification twice in a row, if the probability of the second most likely case is above 0.1.
-controller.preventClassificationLocking = true
+controller.preventClassificationLocking = false
 
 controller.preferredContentSize = CGSize(width: 800, height: 600)
 PlaygroundPage.current.liveView = controller

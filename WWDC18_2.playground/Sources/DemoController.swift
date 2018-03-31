@@ -3,9 +3,12 @@ import UIKit
 import Vision
 
 public class DemoController : UIViewController {
-	var noteViewer: NoteViewer?
+	var mlNoteViewer: MLNoteViewer?
+	var algoNoteViewer: NoteViewer?
 	var lastNote: VNClassificationObservation?
 	var notePlayer: NotePlayer = NotePlayer(path: "sound/", ext: "aif")
+	
+	var algo: NoteDetection?
 	
 	//Should or should not try to prevent hickups by the model
 	public var preventClassificationLocking: Bool = true
@@ -16,16 +19,36 @@ public class DemoController : UIViewController {
 		
 		let drawing = Drawing(frame: CGRect(x: 20, y: 20, width: 150, height: 227))
 		
-		let noteViewer = NoteViewer(frame: CGRect(x: 190, y: 20, width: 150, height: 227), note: UIImage(named: "quarter_clean"))
-		noteViewer.setBackground(UIImage(named: "lines"), lineDistance: 28.375)
-		noteViewer.show(note: .a)
+		//Init note-detection
+		if drawing.canvas != nil {
+			self.algo = NoteDetection(canvas: drawing.canvas!, distanceToFirstLine: drawing.frame.size.height / 8 * 2, distanceBetweenLines: drawing.frame.size.height / 8)
+		}
 		
-		self.noteViewer = noteViewer
+		//MLNoteViewer
+		let mlNoteViewer = MLNoteViewer(frame: CGRect(x: 190, y: 20, width: 150, height: 227), note: UIImage(named: "quarter_clean"))
+		mlNoteViewer.setBackground(UIImage(named: "lines_ml"), lineDistance: 28.375)
+		mlNoteViewer.show(noteClass: "ga")
+		
+		//AlgoNoteViewer
+		let algoNoteViewer = NoteViewer(frame: CGRect(x: 360, y: 20, width: 150, height: 227), note: UIImage(named: "quarter_clean"))
+		algoNoteViewer.setBackground(UIImage(named: "lines"), lineDistance: 28.375)
+		algoNoteViewer.show(note: Note(name: "a", octave: 0))
+		
+		self.mlNoteViewer = mlNoteViewer
+		self.algoNoteViewer = algoNoteViewer
 		
 		self.view.addSubview(drawing)
-		self.view.addSubview(noteViewer)
+		self.view.addSubview(mlNoteViewer)
+		self.view.addSubview(algoNoteViewer)
 		
+		//ML results view
+		let resultListView = ClassificationListView(position: CGPoint(x: 20, y: 300))
+		resultListView.loadClasses(identifiers: ["ga", "gb", "gc", "gd", "ge", "gf", "gg"])
+		self.view.addSubview(resultListView)
+		
+		//Handlers
 		drawing.onClassification(self.onClassificationHandler)
+		drawing.onClassification(resultListView.showClassifications)
 	}
 	
 	private func onClassificationHandler(_ classifications: [VNClassificationObservation]) {
@@ -44,6 +67,8 @@ public class DemoController : UIViewController {
 		//Show the note in the viewer
 		self.showNoteInNoteViewer(note.identifier)
 		
+		self.runAlgorithm()
+		
 		//Play the sound
 		guard let noteSound = NotePlayer.Note(rawValue: note.identifier) else {
 			print("No notesound enum found")
@@ -54,39 +79,24 @@ public class DemoController : UIViewController {
 	}
 	
 	private func showNoteInNoteViewer(_ noteClass: String) {
-		if self.noteViewer == nil {
+		if self.mlNoteViewer == nil {
 			return
 		}
 		
-		var note: NoteViewer.Note?
-		switch noteClass {
-		case "gg":
-			note = NoteViewer.Note.g
-			break
-		case "ga":
-			note = NoteViewer.Note.a
-			break
-		case "gb":
-			note = NoteViewer.Note.b
-			break
-		case "gc":
-			note = NoteViewer.Note.c
-			break
-		case "gd":
-			note = NoteViewer.Note.d
-			break
-		case "ge":
-			note = NoteViewer.Note.e
-			break
-		case "gf":
-			note = NoteViewer.Note.f
-			break
-		default:
+		self.mlNoteViewer!.show(noteClass: noteClass)
+	}
+	
+	private func runAlgorithm() {
+		guard let algo = self.algo else {
 			return
 		}
 		
-		if note != nil {
-			self.noteViewer!.show(note: note!)
+		guard let result = algo.detect() else {
+			return
+		}
+		
+		if self.algoNoteViewer != nil {
+			self.algoNoteViewer!.show(note: result)
 		}
 	}
 }
