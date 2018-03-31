@@ -62,7 +62,8 @@ public class NoteDetection {
 		
 		let closestMiddle = self.closestLine(coord: middleY)
 		
-		if self.lineCoords[closestMiddle.line] == nil {
+		//Check if the closest line is out of bounds
+		if (closestMiddle.line < 0)||(closestMiddle.line > self.lineCoords.count - 1) {
 			return nil
 		}
 		
@@ -81,7 +82,7 @@ public class NoteDetection {
 			
 			//Under line
 			
-			if closestMiddle.line < 3 {
+			if closestMiddle.line < 2 {
 				octave = 1
 			}
 			
@@ -90,7 +91,7 @@ public class NoteDetection {
 			
 			//Above line
 			
-			if closestMiddle.line < 1 {
+			if closestMiddle.line < 3 {
 				octave = 1
 			}
 			
