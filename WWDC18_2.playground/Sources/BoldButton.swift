@@ -10,7 +10,7 @@ public class BoldButton : UIButton {
 	
 	public required init(center: CGPoint) {
 		super.init(frame: CGRect(x: center.x - defaultSize.width / 2, y: center.y - defaultSize.height / 2, width: defaultSize.width, height: defaultSize.height))
-		self.doSetup()
+		self.setup()
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
@@ -35,7 +35,7 @@ public class BoldButton : UIButton {
 		}
 	}
 	
-	private func doSetup() {
+	private func setup() {
 		
 		///Set the default content-theme
 		self.setContentTheme(.dark)
