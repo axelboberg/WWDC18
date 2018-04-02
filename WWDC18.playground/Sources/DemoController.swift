@@ -129,7 +129,7 @@ public class DemoController : UIViewController {
 		
 		///Trying to prevent hickups by using the second most likely classification if the same result is
 		///achieved multiple times in a row and the second most likely classification has a score of over 0.1.
-		if self.preventClassificationLocking && self.lastNote != nil {
+		if (self.preventClassificationLocking)&&(self.lastNote != nil) {
 			if self.lastNote!.identifier == note.identifier && classifications[1].confidence > 0.1 {
 				note = classifications[1]
 			}
