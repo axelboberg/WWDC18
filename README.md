@@ -7,7 +7,7 @@ A demo of a machine learning model made to classify photographs of notes, here u
 A year-long graduation project is a requirement of the swedish upper secondary school.
 My project, a machine learning model trained to recognize photographs of music notes (middle-C to B), resulted in this demo.
 
-However, the playground restricted me from using the camera as it's not availble in the iOS simulator and so I had to find another solution. That solution was to add a canvas allowing the user to draw the noteheads. As expected, since the model was trained on photographs, this solution did not yield great results from the classifier.
+However, the playground restricted me from using the camera as it's not availble in the iOS simulator and so I had to find another solution. That solution was to add a canvas allowing the user to draw the noteheads. As expected, since the model was trained on photographs, this solution did not yield great results from the classifier. Still this demo acts as a working proof of the model's aspirations.
 
 As a final touch I added an algorithm calculating the note from the location of the points in the drawing.
 The output from this algorithm acts as a complement to the machine-learning output.
