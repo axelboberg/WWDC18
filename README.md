@@ -20,4 +20,4 @@ A total of 3000 photographs were collected.
 The final dataset contained about 700 photographs (after selecting only the highest-quality datapoints).
 
 ## Contact
-For questions or contact in general, send me an email at hello[at]axelboberg.se
+For questions or contact in general, send me an email at hello[at]axelboberg.se or meet me at WWDC18.
